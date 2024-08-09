@@ -64,4 +64,10 @@
   ### - One-to-Many relationship:
    ####  - One `Subscription` can be assigned to many `Users`.
    ####  - A `User` subscribes to one `Subscription`.
+   # <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> 
+   # Lab 12: Tunify Platform - Repo Integration:
+   ### We prepared the Repositories file, which includes two files, one for writing Interfaces and the other for writing Services,
+   ### and created a control file to communicate directly with the Db using the crud,
+   ### and the repository works to cancel direct interaction with the DbContext and is dealt with via services.
+
 
