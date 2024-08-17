@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Tunify_Platform;
 
@@ -11,9 +12,11 @@ using Tunify_Platform;
 namespace Tunify_Platform.Migrations
 {
     [DbContext(typeof(TunifyDbContext))]
-    partial class TunifyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240816100607_test")]
+    partial class test
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,7 +55,7 @@ namespace Tunify_Platform.Migrations
                             AlbumId = 1,
                             AlbumName = "Album 1",
                             ArtistId = 1,
-                            ReleaseDate = new DateTime(2024, 8, 17, 13, 44, 4, 479, DateTimeKind.Local).AddTicks(4232)
+                            ReleaseDate = new DateTime(2024, 8, 16, 13, 6, 7, 37, DateTimeKind.Local).AddTicks(4475)
                         });
                 });
 
@@ -113,14 +116,14 @@ namespace Tunify_Platform.Migrations
                         new
                         {
                             PlaylistId = 1,
-                            CreatedDate = new DateTime(2024, 8, 17, 13, 44, 4, 479, DateTimeKind.Local).AddTicks(4247),
+                            CreatedDate = new DateTime(2024, 8, 16, 13, 6, 7, 37, DateTimeKind.Local).AddTicks(4488),
                             PlaylistName = "Playlist 1",
                             UserId = 1
                         },
                         new
                         {
                             PlaylistId = 2,
-                            CreatedDate = new DateTime(2024, 8, 17, 13, 44, 4, 479, DateTimeKind.Local).AddTicks(4249),
+                            CreatedDate = new DateTime(2024, 8, 16, 13, 6, 7, 37, DateTimeKind.Local).AddTicks(4490),
                             PlaylistName = "Playlist 2",
                             UserId = 2
                         });
@@ -286,7 +289,7 @@ namespace Tunify_Platform.Migrations
                         {
                             UserId = 1,
                             Email = "user1@example.com",
-                            JoinDate = new DateTime(2024, 8, 17, 13, 44, 4, 479, DateTimeKind.Local).AddTicks(4007),
+                            JoinDate = new DateTime(2024, 8, 16, 13, 6, 7, 37, DateTimeKind.Local).AddTicks(4246),
                             SubscriptionId = 1,
                             Username = "user1"
                         },
@@ -294,7 +297,7 @@ namespace Tunify_Platform.Migrations
                         {
                             UserId = 2,
                             Email = "user2@example.com",
-                            JoinDate = new DateTime(2024, 8, 17, 13, 44, 4, 479, DateTimeKind.Local).AddTicks(4019),
+                            JoinDate = new DateTime(2024, 8, 16, 13, 6, 7, 37, DateTimeKind.Local).AddTicks(4259),
                             SubscriptionId = 1,
                             Username = "user2"
                         });

@@ -61,5 +61,22 @@ namespace Tunify_Platform.Controllers
             var deleteplaylist = _playlist.GetPlaylistById(id);
             return Ok(deleteplaylist);
         }
+
+        // POST: api/playlists/{playlistId}/songs/{songId}
+        [HttpPost("{playlistId}/song/{songId}")]
+        public async Task<IActionResult> AddSongToPlaylist(int playlistId, int songId)
+        {
+            await _playlist.AddSongToPlaylistAsync(playlistId, songId);
+            return Ok();
+        }
+
+        // GET:  api/playlists/{playlistId}/song
+        [HttpGet("{playlistId}/song")]
+        public async Task<IActionResult> GetSongsInPlaylist(int playlistId)
+        {
+            var songs = await _playlist.GetSongsInPlaylistAsync(playlistId);
+            return Ok(songs);
+        }
+
     }
 }

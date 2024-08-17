@@ -49,7 +49,7 @@ namespace Tunify_Platform.Controllers
         [HttpPost]
         public async Task<ActionResult<Song>> PostSong(Song song)
         {
-            var createsong = await _song.createSong(song);
+            var createsong = await _song.CreateSong(song);
             return Ok(createsong);
         }
 

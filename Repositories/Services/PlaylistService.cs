@@ -12,12 +12,37 @@ namespace Tunify_Platform
         {
             _context = context;
         }
-        public async Task <Playlist> CreatePlaylist(Playlist playlist)
+
+        public async Task AddSongToPlaylistAsync(int playlistId, int songId)
         {
-             _context.Playlist.Add(playlist);
+            var playlist = _context.Playlist.FirstOrDefault(x => x.PlaylistId == playlistId);
+            if (playlist == null)
+            {
+                throw new Exception("Playlist not found");
+            }
+
+            var song = _context.Song.FirstOrDefault(x => x.SongId == songId);
+            if (song == null)
+            {
+                throw new Exception("Song not found");
+            }
+
+            playlist.PlaylistSongs.Add(new PlaylistSong
+            {
+                PlaylistId = playlistId,
+                SongId = songId
+            });
+
+            await UpdatePlaylistById(playlistId, playlist);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<Playlist> CreatePlaylist(Playlist playlist)
+        {
+            _context.Playlist.Add(playlist);
             await _context.SaveChangesAsync();
             return playlist;
-            
+
         }
 
         public async Task DeletePlaylist(int id)
@@ -41,6 +66,20 @@ namespace Tunify_Platform
             var allplaylists = await _context.Playlist.FindAsync(id);
 
             return allplaylists;
+        }
+
+        public async Task<IEnumerable<Song>> GetSongsInPlaylistAsync(int playlistId)
+        {
+            var playlist = await _context.Playlist
+                .Include(x => x.PlaylistSongs)
+                .ThenInclude(p => p.Song)
+                .FirstOrDefaultAsync(p => p.PlaylistId == playlistId);
+            if (playlist == null)
+            {
+                throw new Exception("Playlist not found");
+            }
+
+            return playlist.PlaylistSongs.Select(ps => ps.Song);
         }
 
         public async Task<Playlist> UpdatePlaylistById(int id, Playlist updatedPlaylist)
