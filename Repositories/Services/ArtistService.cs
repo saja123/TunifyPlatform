@@ -12,6 +12,25 @@ namespace Tunify_Platform
         {
             _context = context;
         }
+
+        public async Task AddSongToArtistAsync(int artistId, int songId)
+        {
+            var artist = await _context.Artist.Include(a => a.Songs).FirstOrDefaultAsync(a => a.ArtistId == artistId);
+            if (artist == null)
+            {
+                throw new Exception("Artist not found");
+            }
+
+            var song = await _context.Song.FindAsync(songId);
+            if (song == null)
+            {
+                throw new Exception("Song not found");
+            }
+
+            artist.Songs.Add(song);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<Artist> createArtist(Artist artist)
         {
             _context.Artist.Add(artist);
@@ -36,6 +55,17 @@ namespace Tunify_Platform
         {
             var allartist = await _context.Artist.FindAsync(id);
             return allartist;
+        }
+
+        public async Task<IEnumerable<Song>> GetSongsByArtistAsync(int artistId)
+        {
+            var artist = await _context.Artist.Include(a => a.Songs).FirstOrDefaultAsync(a => a.ArtistId == artistId);
+            if (artist == null)
+            {
+                throw new Exception("Artist not found");
+            }
+
+            return artist.Songs;
         }
 
         public async Task<Artist> UpdateArtistById(int id, Artist updatedArtist)

@@ -70,4 +70,40 @@
    ### and created a control file to communicate directly with the Db using the crud,
    ### and the repository works to cancel direct interaction with the DbContext and is dealt with via services.
 
+   ### lab13 "Routing"
+   
+![Testing.png](Testing.png)
+# 1) I writing the New Code in IArtist "Task<IEnumerable<Song>> GetSongsByArtistAsync(int artistId);" to make Relations with Song "Mony"
+# 2) writing in IPlay "Task<IEnumerable<Song>> GetSongsInPlaylistAsync(int playlistId);" to make Relations with Song "Mony"
+# 3) writing this code in services "public async Task AddSongToArtistAsync(int artistId, int songId
+       # {
+         #   var artist = await _context.Artist.Include(a => a.Songs).FirstOrDefaultAsync(a => a.ArtistId == artistId);
+           # if (artist == null)
+           # {
+           #     throw new Exception("Artist not found");
+           # }
+
+          #  var song = await _context.Song.FindAsync(songId);
+          #  if (song == null)
+          #  {
+                throw new Exception("Song not found");
+         #   }
+
+          #  artist.Songs.Add(song);
+          #   await _context.SaveChangesAsync();"
+             
+       # 4) public async Task<IEnumerable<Song>> GetSongsByArtistAsync(int artistId)
+      #  {
+           # var artist = await _context.Artist.Include(a => a.Songs).FirstOrDefaultAsync(a => a.ArtistId == artistId);
+          #  if (artist == null)
+         #   {
+                throw new Exception("Artist not found");
+          #  }
+
+          #  return artist.Songs;
+     #   }
+     # 5) i write like this in all pages you want updates
+
+
+
 

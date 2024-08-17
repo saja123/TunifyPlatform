@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Tunify_Platform;
+using System.Text.Json.Serialization;
 
 
 namespace Tunify_Platform
@@ -14,13 +16,24 @@ namespace Tunify_Platform
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // إعداد DbContext
-            string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-            builder.Services.AddDbContext<TunifyDbContext>(options => options.UseSqlServer(connectionString));
 
-            builder.Services.AddControllers();
+            //string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+            //Console.WriteLine($"Connection String: {connectionString}");
+            //builder.Services.AddDbContext<TunifyDbContext>(options => options.UseSqlServer(connectionString));
 
-            // إعداد الخدمات
+            //builder.Services.AddControllers();
+
+            builder.Services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+                });
+
+            string ConnectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
+
+            builder.Services.AddDbContext<TunifyDbContext>(optionsX => optionsX.UseSqlServer(ConnectionString));
+
+
             builder.Services.AddScoped<IUserRepository, UserService>();
             builder.Services.AddScoped<ISongRepository, SongService>();
             builder.Services.AddScoped<IPlaylistRepository, PlaylistService>();

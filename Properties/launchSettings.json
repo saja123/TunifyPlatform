@@ -1,4 +1,8 @@
 ﻿{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=(localdb)\\MSSQLLocalDB;Database=TunifyDB;Trusted_Connection=true;TrustServerCertificate=True;MultipleActiveResultSets=true"
+  
+  },
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,

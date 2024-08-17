@@ -12,7 +12,7 @@ namespace Tunify_Platform
         {
             _context = context;
         }
-        public async Task<Song> createSong(Song song)
+        public async Task<Song> CreateSong(Song song)
         {
             _context.Song.Add(song);
             await _context.SaveChangesAsync();

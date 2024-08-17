@@ -49,7 +49,7 @@ namespace Tunify_Platform.Controllers
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User user)
         {
-           var createuser =  await _user.createUser(user);
+            var createuser = await _user.createUser(user);
             return Ok(createuser);
         }
 
@@ -57,7 +57,7 @@ namespace Tunify_Platform.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
-          var deleteuser = _user.DeleteUserById(id);
+            var deleteuser = _user.DeleteUserById(id);
             return Ok(deleteuser);
         }
     }
