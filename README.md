@@ -104,6 +104,31 @@
      #   }
      # 5) i write like this in all pages you want updates
 
+     ## Swaggest UI
+     # 1) swaggest configration
+     #builder.Services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+                {
+                    Title = "Tunify API",
+                    Version = "v1",
+                    Description = "API for managing playlists, songs, and artists in the Tunify Platform"
+                });
+            });
+             # 2) // call swagger service "v1 is the document Name"
+            app.UseSwagger(
+             options =>
+             {
+                 options.RouteTemplate = "api/{documentName}/swagger.json";
+             }
+             );
+             # 3) // call swagger UI
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/api/v1/swagger.json", "Tunify API v1");  
+                options.RoutePrefix = "Tunifyswagger";
+            });
+            ![Swaggest.png](Swaggest.png)
 
 
 
