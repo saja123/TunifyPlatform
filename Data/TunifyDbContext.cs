@@ -1,9 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Tunify_Platform.Models;
+using Tunify_Platform.Models.DTO;
 
 namespace Tunify_Platform
 {
-    public class TunifyDbContext : DbContext
+    public class TunifyDbContext : IdentityDbContext<ApplicationUser>
     {
         public DbSet<Album> Album { get; set; }
         public DbSet<Artist> Artist { get; set; }
@@ -12,24 +15,27 @@ namespace Tunify_Platform
         public DbSet<Song> Song { get; set; }
         public DbSet<Subscription> Subscription { get; set; }
         public DbSet<User> Users { get; set; }
+        
 
         public TunifyDbContext(DbContextOptions<TunifyDbContext> options)
             : base(options)
         {
         }
+        
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //{
         //    base.OnConfiguring(optionsBuilder);
         //    var config = new ConfigurationBuilder().AddJsonFile("appsettings.json")
         //        .Build();
 
-        //    var connectionString = config.GetSection("DefaultConnection").Value;
+            //    var connectionString = config.GetSection("DefaultConnection").Value;
 
-        //    optionsBuilder.UseSqlServer(connectionString);
-        //}
+            //    optionsBuilder.UseSqlServer(connectionString);
+            //}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
 
             #region PlaylistSong configuration
             modelBuilder.Entity<PlaylistSong>()
@@ -127,8 +133,10 @@ namespace Tunify_Platform
                 new PlaylistSong { PlaylistSongId = 3, PlaylistId = 2, SongId = 1 }
             );
             #endregion
+            
         }
+    }
 
 
     }
-}
+
