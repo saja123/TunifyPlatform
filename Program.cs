@@ -60,6 +60,19 @@ namespace Tunify_Platform
                 });
             });
 
+//            options =>
+//            {
+//                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+//                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+//                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+//            }
+//).AddJwtBearer(
+//    options =>
+//    {
+//        options.TokenValidationParameters = JwtTokenService.ValidateToken(builder.Configuration);
+//    }
+//);
+
             var app = builder.Build();
             // Identity
             app.UseAuthentication();
