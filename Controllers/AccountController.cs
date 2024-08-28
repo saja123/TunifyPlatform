@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Tunify_Platform.Models;
 using Tunify_Platform.Models.DTO;
 using TunifyPrj.Repositories.Interfaces;
 
@@ -10,10 +13,14 @@ namespace Tunify_Platform.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IAccount _accountService;
+        private readonly IUserRepository _userService;
+        private UserManager<ApplicationUser> _userManager;
 
-        public AccountController(IAccount accountService)
+        public AccountController(IAccount accountService, IUserRepository userService, UserManager<ApplicationUser> userManager)
         {
             _accountService = accountService;
+            _userService = userService; 
+            _userManager = userManager; 
         }
 
         [HttpPost("Register")]
@@ -31,7 +38,7 @@ namespace Tunify_Platform.Controllers
                 return BadRequest(ModelState);
             }
 
-            return Ok("User registered successfully");
+            return Ok(userDto);
         }
 
         [HttpPost("Login")]
@@ -49,7 +56,7 @@ namespace Tunify_Platform.Controllers
                 return Unauthorized("Invalid login attempt");
             }
 
-            return Ok("Login successful");
+            return Ok(userDto);
         }
 
         [HttpPost("logout")]
@@ -57,6 +64,14 @@ namespace Tunify_Platform.Controllers
         {
             await _accountService.Logout();
             return Ok("Logout successful");
+        }
+
+        [Authorize(Policy = "AdminPolicy")]
+        [HttpPost("AdminGetaUser")]
+        public async Task<IActionResult> SomeAdminAction()
+        {
+            var users = await _userService.GetAllUsers();
+            return Ok(users);
         }
     }
 }
