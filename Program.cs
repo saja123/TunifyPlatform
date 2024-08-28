@@ -12,6 +12,9 @@ using TunifyPrj.Repositories.Services;
 using Tunify_Platform.Repositories.Services;
 using Tunify_Platform.Models;
 using TunifyPrj.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
 
 
 namespace Tunify_Platform
@@ -49,6 +52,33 @@ namespace Tunify_Platform
             builder.Services.AddScoped<IPlaylistRepository, PlaylistService>();
             builder.Services.AddScoped<IArtistRepository, ArtistService>();
             builder.Services.AddScoped<IAccount, AccountService>();
+            builder.Services.AddScoped<JwtTokenServices>();
+
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminPolicy", policy =>
+                    policy.RequireClaim("Permission", "AdminPolicy"));
+            });
+
+
+            builder.Services.AddAuthentication(
+    options =>
+    {
+        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    }
+).AddJwtBearer(
+    options =>
+    {
+        options.TokenValidationParameters = JwtTokenServices.ValidateToken(builder.Configuration);
+    }
+);
+
+
+
+
+
             // add swagger builder
             builder.Services.AddSwaggerGen(options =>
             {
@@ -58,24 +88,37 @@ namespace Tunify_Platform
                     Version = "v1",
                     Description = "API for managing playlists, songs, and artists in the Tunify Platform"
                 });
-            });
 
-//            options =>
-//            {
-//                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-//                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-//                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-//            }
-//).AddJwtBearer(
-//    options =>
-//    {
-//        options.TokenValidationParameters = JwtTokenService.ValidateToken(builder.Configuration);
-//    }
-//);
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "Please enter user token below."
+                });
+
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+     {
+         {
+             new OpenApiSecurityScheme
+             {
+                 Reference = new OpenApiReference
+                 {
+                     Type = ReferenceType.SecurityScheme,
+                     Id = "Bearer"
+                 }
+             },
+             Array.Empty<string>()
+         }
+     });
+            });
 
             var app = builder.Build();
             // Identity
             app.UseAuthentication();
+            app.UseAuthorization();
             // call swagger service "v1 is the document Name"
             app.UseSwagger(
              options =>

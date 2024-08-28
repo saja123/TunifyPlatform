@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.Security.Claims;
 using Tunify_Platform.Models;
 using Tunify_Platform.Models.DTO;
 using TunifyPrj.Repositories.Interfaces;
@@ -11,11 +12,13 @@ namespace Tunify_Platform.Repositories.Services
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private JwtTokenServices _jwtTokenService;
 
-        public AccountService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public AccountService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, JwtTokenServices jwtTokenService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _jwtTokenService = jwtTokenService;
         }
 
         public async Task<UserDto> Register(RegisterDto registerdUserDto, ModelStateDictionary modelState)
@@ -28,13 +31,16 @@ namespace Tunify_Platform.Repositories.Services
             };
 
             var result = await _userManager.CreateAsync(user, registerdUserDto.Password);
+            await _userManager.AddClaimAsync(user, new Claim("Permission", "AdminPolicy"));
 
             if (result.Succeeded)
             {
                 return new UserDto()
                 {
                     Id = user.Id,
-                    UserName = user.UserName
+                    UserName = user.UserName,
+                    Roles = await _userManager.GetRolesAsync(user),
+                    Token = await _jwtTokenService.GenerateToken(user, TimeSpan.FromMinutes(240))
                 };
             }
 
@@ -61,7 +67,8 @@ namespace Tunify_Platform.Repositories.Services
                 return new UserDto()
                 {
                     Id = user.Id,
-                    UserName = user.UserName
+                    UserName = user.UserName,
+                    Token = await _jwtTokenService.GenerateToken(user, TimeSpan.FromMinutes(240))
                 };
             }
 
@@ -72,6 +79,9 @@ namespace Tunify_Platform.Repositories.Services
             await _signInManager.SignOutAsync();
         }
 
-
+        public async Task<string> GenerateJwtToken(ApplicationUser user, IList<string> roles)
+        {
+            return await _jwtTokenService.GenerateToken(user, TimeSpan.FromHours(4));
+        }
     }
 }

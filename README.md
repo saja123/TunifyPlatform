@@ -129,6 +129,8 @@
                 options.RoutePrefix = "Tunifyswagger";
             });
             ![Swaggest.png](Swaggest.png)
+            # Make Authorization and Authentication 
+            ## first begining on make Jwt Srevices
 
 
 
